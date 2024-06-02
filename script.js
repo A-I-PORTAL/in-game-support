@@ -58,7 +58,7 @@ onAuthStateChanged(auth, user => {
 
 // Logout function
 logoutBtn.addEventListener('click', () => {
-    signOut(auth);
+    signOut(auth).catch(error => console.error("Error signing out:", error));
 });
 
 // Load Posts
@@ -83,8 +83,9 @@ postBtn.addEventListener('click', () => {
             timestamp: serverTimestamp(),
             user: auth.currentUser.displayName,
             userId: auth.currentUser.uid
-        });
+        }).catch(error => console.error("Error adding document:", error));
         postInput.value = '';
     }
 });
+
 
