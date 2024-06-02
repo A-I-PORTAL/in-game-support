@@ -46,11 +46,13 @@ ui.start('#firebaseui-auth-container', uiConfig);
 onAuthStateChanged(auth, user => {
     if (user) {
         document.getElementById('firebaseui-auth-container').style.display = 'none';
+        document.getElementById('welcome-message').style.display = 'none';
         logoutBtn.style.display = 'block';
         forumSection.style.display = 'block';
         loadPosts();
     } else {
         document.getElementById('firebaseui-auth-container').style.display = 'block';
+        document.getElementById('welcome-message').style.display = 'block';
         logoutBtn.style.display = 'none';
         forumSection.style.display = 'none';
     }
@@ -87,5 +89,6 @@ postBtn.addEventListener('click', () => {
         postInput.value = '';
     }
 });
+
 
 
