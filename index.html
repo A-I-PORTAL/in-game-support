@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>In-Game Support</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.8.0/firebaseui.css" />
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-        import { getAuth, GoogleAuthProvider, signInWithRedirect, signOut, onAuthStateChanged, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { loadFirebaseUI } from './firebase-ui.js';
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -30,45 +32,24 @@
         const db = getFirestore(app);
 
         // DOM Elements
-        const loginBtn = document.getElementById('login-btn');
         const logoutBtn = document.getElementById('logout-btn');
         const forumSection = document.getElementById('forum');
         const postBtn = document.getElementById('post-btn');
         const postInput = document.getElementById('post-input');
         const postsDiv = document.getElementById('posts');
 
-        // Google Auth Provider
-        const provider = new GoogleAuthProvider();
-
-        // Login function
-        loginBtn.addEventListener('click', () => {
-            signInWithRedirect(auth, provider);
-        });
-
-        // Check for redirect result
-        getRedirectResult(auth)
-            .then((result) => {
-                if (result.user) {
-                    // User is signed in.
-                    loginBtn.style.display = 'none';
-                    logoutBtn.style.display = 'block';
-                    forumSection.style.display = 'block';
-                    loadPosts();
-                }
-            })
-            .catch((error) => {
-                console.error("Error during sign-in with redirect:", error);
-            });
+        // Initialize FirebaseUI
+        loadFirebaseUI(auth);
 
         // Auth State Listener
         onAuthStateChanged(auth, user => {
             if (user) {
-                loginBtn.style.display = 'none';
+                document.getElementById('firebaseui-auth-container').style.display = 'none';
                 logoutBtn.style.display = 'block';
                 forumSection.style.display = 'block';
                 loadPosts();
             } else {
-                loginBtn.style.display = 'block';
+                document.getElementById('firebaseui-auth-container').style.display = 'block';
                 logoutBtn.style.display = 'none';
                 forumSection.style.display = 'none';
             }
@@ -110,16 +91,19 @@
 <body>
     <header>
         <h1>In-Game Support Center</h1>
-        <button id="login-btn">Login with Google</button>
         <button id="logout-btn" style="display:none;">Logout</button>
     </header>
-    <main id="forum" style="display:none;">
-        <textarea id="post-input" placeholder="Write your post here..."></textarea>
-        <button id="post-btn">Post</button>
-        <div id="posts"></div>
+    <main>
+        <div id="firebaseui-auth-container"></div>
+        <div id="forum" style="display:none;">
+            <textarea id="post-input" placeholder="Write your post here..."></textarea>
+            <button id="post-btn">Post</button>
+            <div id="posts"></div>
+        </div>
     </main>
 </body>
 </html>
+
 
 
 
