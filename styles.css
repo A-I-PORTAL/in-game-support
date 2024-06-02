@@ -6,6 +6,8 @@ body, html {
     align-items: center;
     justify-content: center;
     font-family: Arial, sans-serif;
+    background-image: url('path/to/your/background-image.jpg');
+    background-size: cover;
 }
 
 header {
@@ -13,12 +15,15 @@ header {
     margin-bottom: 20px;
 }
 
-#firebaseui-auth-container {
+#firebaseui-auth-container, #welcome-message, #forum {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+}
+
+#firebaseui-auth-container {
+    height: 50vh;
 }
 
 #forum {
@@ -39,5 +44,11 @@ header {
     width: 300px;
     max-width: 100%;
 }
+
+#welcome-message {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
 
 
