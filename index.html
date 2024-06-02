@@ -6,6 +6,10 @@
     <title>In-Game Support</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.8.0/firebaseui.css" />
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/4.8.0/firebaseui.js"></script>
     <script type="module" src="script.js"></script>
 </head>
 <body>
@@ -14,9 +18,6 @@
         <button id="logout-btn" style="display:none;">Logout</button>
     </header>
     <main>
-        <div id="welcome-message">
-            <p>Welcome to the In-Game Support Center. Please log in to participate in the forum.</p>
-        </div>
         <div id="firebaseui-auth-container"></div>
         <div id="forum" style="display:none;">
             <textarea id="post-input" placeholder="Write your post here..."></textarea>
@@ -26,6 +27,7 @@
     </main>
 </body>
 </html>
+
 
 
 
