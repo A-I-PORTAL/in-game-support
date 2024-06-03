@@ -1,7 +1,3 @@
-// The code inside the <script> tag in the index.html
-// should be moved to a separate script.js file if preferred
-// and include the <script type="module" src="script.js"></script> in index.html
-
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
@@ -86,6 +82,7 @@ postBtn.addEventListener('click', () => {
         postInput.value = '';
     }
 });
+
 
 
 
