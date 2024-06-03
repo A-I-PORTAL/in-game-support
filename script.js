@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // Your web app's Firebase configuration
@@ -34,12 +34,30 @@ const provider = new GoogleAuthProvider();
 
 // Login function
 loginBtn.addEventListener('click', () => {
-    signInWithPopup(auth, provider);
+    signInWithRedirect(auth, provider);
 });
+
+// Handle the redirect result
+getRedirectResult(auth)
+    .then((result) => {
+        if (result.user) {
+            // User is signed in
+            loginBtn.style.display = 'none';
+            logoutBtn.style.display = 'block';
+            forumSection.style.display = 'block';
+            loadPosts();
+        }
+    }).catch((error) => {
+        console.error("Error during authentication: ", error);
+    });
 
 // Logout function
 logoutBtn.addEventListener('click', () => {
-    signOut(auth);
+    signOut(auth).then(() => {
+        loginBtn.style.display = 'block';
+        logoutBtn.style.display = 'none';
+        forumSection.style.display = 'none';
+    });
 });
 
 // Auth State Listener
@@ -82,6 +100,7 @@ postBtn.addEventListener('click', () => {
         postInput.value = '';
     }
 });
+
 
 
 
