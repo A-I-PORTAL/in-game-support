@@ -1,16 +1,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithRedirect, signOut, onAuthStateChanged, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBTalPVVePU959aKRxiy145EanVc6ob3dI",
-    authDomain: "gamer-support-394c1.firebaseapp.com",
-    projectId: "gamer-support-394c1",
-    storageBucket: "gamer-support-394c1.appspot.com",
-    messagingSenderId: "752562072624",
-    appId: "1:752562072624:web:c2cc3560845541e43a91f5",
-    measurementId: "G-THD3RTE4NC"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    measurementId: "YOUR_MEASUREMENT_ID"
 };
 
 // Initialize Firebase
@@ -40,7 +40,7 @@ loginBtn.addEventListener('click', () => {
     if (isEmbeddedBrowser()) {
         alert("Please use a regular browser to log in.");
     } else {
-        signInWithPopup(auth, provider).catch((error) => {
+        signInWithRedirect(auth, provider).catch((error) => {
             console.error("Error during sign-in:", error);
         });
     }
@@ -51,6 +51,15 @@ logoutBtn.addEventListener('click', () => {
     signOut(auth).catch((error) => {
         console.error("Error during sign-out:", error);
     });
+});
+
+// Get redirect result
+getRedirectResult(auth).then((result) => {
+    if (result.user) {
+        console.log("User signed in via redirect:", result.user);
+    }
+}).catch((error) => {
+    console.error("Error during getRedirectResult:", error);
 });
 
 // Auth State Listener
@@ -86,25 +95,19 @@ function loadPosts() {
 // Post function
 postBtn.addEventListener('click', () => {
     const text = postInput.value;
-    if (text.trim()) {
+    const currentUser = auth.currentUser;
+    if (currentUser && text.trim()) {
         addDoc(collection(db, 'posts'), {
             text: text,
             timestamp: serverTimestamp(),
-            user: auth.currentUser.displayName,
-            userId: auth.currentUser.uid
+            user: currentUser.displayName,
+            userId: currentUser.uid
         }).then(() => {
             postInput.value = '';
         }).catch((error) => {
             console.error("Error adding document:", error);
         });
+    } else {
+        console.error("No user signed in or empty post");
     }
 });
-
-
-
-
-
-
-
-
-
