@@ -1,10 +1,8 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Your web app's Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyBTalPVVePU959aKRxiy145EanVc6ob3dI",
     authDomain: "gamer-support-394c1.firebaseapp.com",
@@ -17,7 +15,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
@@ -32,42 +29,40 @@ const postsDiv = document.getElementById('posts');
 // Google Auth Provider
 const provider = new GoogleAuthProvider();
 
+// Detects the user agent
+function isEmbeddedBrowser() {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    return /FBAN|FBAV|Instagram|Twitter|Snapchat/i.test(userAgent);
+}
+
 // Login function
 loginBtn.addEventListener('click', () => {
-    signInWithRedirect(auth, provider);
+    if (isEmbeddedBrowser()) {
+        alert("Please use a regular browser to log in.");
+    } else {
+        signInWithPopup(auth, provider).catch((error) => {
+            console.error("Error during sign-in:", error);
+        });
+    }
 });
-
-// Handle the redirect result
-getRedirectResult(auth)
-    .then((result) => {
-        if (result.user) {
-            // User is signed in
-            loginBtn.style.display = 'none';
-            logoutBtn.style.display = 'block';
-            forumSection.style.display = 'block';
-            loadPosts();
-        }
-    }).catch((error) => {
-        console.error("Error during authentication: ", error);
-    });
 
 // Logout function
 logoutBtn.addEventListener('click', () => {
-    signOut(auth).then(() => {
-        loginBtn.style.display = 'block';
-        logoutBtn.style.display = 'none';
-        forumSection.style.display = 'none';
+    signOut(auth).catch((error) => {
+        console.error("Error during sign-out:", error);
     });
 });
 
 // Auth State Listener
-onAuthStateChanged(auth, user => {
+onAuthStateChanged(auth, (user) => {
     if (user) {
+        console.log("User signed in:", user);
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'block';
         forumSection.style.display = 'block';
         loadPosts();
     } else {
+        console.log("User signed out");
         loginBtn.style.display = 'block';
         logoutBtn.style.display = 'none';
         forumSection.style.display = 'none';
@@ -77,9 +72,10 @@ onAuthStateChanged(auth, user => {
 // Load Posts
 function loadPosts() {
     const q = query(collection(db, 'posts'), orderBy('timestamp', 'desc'));
-    onSnapshot(q, snapshot => {
+    onSnapshot(q, (snapshot) => {
         postsDiv.innerHTML = '';
-        snapshot.forEach(doc => {
+        snapshot.forEach((doc) => {
+            console.log(doc.data());
             const post = document.createElement('div');
             post.textContent = doc.data().text;
             postsDiv.appendChild(post);
@@ -96,10 +92,14 @@ postBtn.addEventListener('click', () => {
             timestamp: serverTimestamp(),
             user: auth.currentUser.displayName,
             userId: auth.currentUser.uid
+        }).then(() => {
+            postInput.value = '';
+        }).catch((error) => {
+            console.error("Error adding document:", error);
         });
-        postInput.value = '';
     }
 });
+
 
 
 
