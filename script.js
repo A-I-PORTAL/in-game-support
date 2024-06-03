@@ -4,13 +4,13 @@ import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSn
 
 // Firebase configuration
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID",
-    measurementId: "YOUR_MEASUREMENT_ID"
+    apiKey: "AIzaSyBTalPVVePU959aKRxiy145EanVc6ob3dI",
+    authDomain: "gamer-support-394c1.firebaseapp.com",
+    projectId: "gamer-support-394c1",
+    storageBucket: "gamer-support-394c1.appspot.com",
+    messagingSenderId: "752562072624",
+    appId: "1:752562072624:web:c2cc3560845541e43a91f5",
+    measurementId: "G-THD3RTE4NC"
 };
 
 // Initialize Firebase
@@ -111,3 +111,4 @@ postBtn.addEventListener('click', () => {
         console.error("No user signed in or empty post");
     }
 });
+
